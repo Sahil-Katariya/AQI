@@ -6,10 +6,10 @@ body {
   font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background: linear-gradient(135deg, #e0f7fa, #e1f5fe);
   color: #212529;
-  margin: 0;
-  padding: 0;
-}
+  margin:auto;
+  padding-left: 5%;
 
+}
 /* Header */
 .app-header {
   background: #0d6efd;
