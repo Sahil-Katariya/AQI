@@ -72,6 +72,15 @@ function Dashboard() {
             <li>
               <b>NOx:</b> {aqiData.nox} ppm
             </li>
+            <li>
+              <b>Air Quality index:</b> {aqiData.mq135} ppm
+            </li>
+            <li>
+              <b>temperature :</b> {aqiData.temperature} ppm
+            </li>
+            <li>
+              <b>humidity:</b> {aqiData.humidity} ppm
+            </li>
           </ul>
 
           {/* Line Chart for last 10 readings */}
@@ -105,8 +114,20 @@ function Dashboard() {
                 <Line
                   type="monotone"
                   dataKey="nox"
-                  stroke="#dc3545"
+                  stroke="#dc0545"
                   name="NOx"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="mq135"
+                  stroke="#f100c1ff"
+                  name="Air quality index"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="humidity"
+                  stroke="#bb45dcff"
+                  name="humidity"
                 />
               </LineChart>
             </ResponsiveContainer>
