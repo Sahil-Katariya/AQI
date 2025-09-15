@@ -1,59 +1,245 @@
-/* Import Bootstrap */
-/* @import "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"; */
-
-/* General App Layout */
+/* General Body Styles */
 body {
-  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: linear-gradient(135deg, #e0f7fa, #e1f5fe);
-  color: #212529;
-  margin:auto;
-  padding-left: 5%;
-
+    min-height: 100vh;
+    background-color: #0f172a; /* formerly bg-slate-900 */
+    color: white;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* formerly font-sans */
 }
+
+/* App Container */
+#app-container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem 1rem; /* formerly py-8 px-4 */
+}
+
+@media (min-width: 640px) {
+    #app-container { max-width: 640px; padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+@media (min-width: 768px) {
+    #app-container { max-width: 768px; }
+}
+@media (min-width: 1024px) {
+    #app-container { max-width: 1024px; padding-left: 2rem; padding-right: 2rem; }
+}
+@media (min-width: 1280px) {
+    #app-container { max-width: 1280px; }
+}
+
 /* Header */
-.app-header {
-  background: #0d6efd;
-  color: white;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-.app-header h1 {
-  font-weight: 600;
-  margin: 0;
-}
-.app-header p {
-  font-size: 0.9rem;
-  opacity: 0.9;
+header {
+    text-align: center;
+    margin-bottom: 2.5rem; /* formerly mb-10 */
 }
 
-/* Dashboard Card */
-.dashboard-card {
-  background: #ffffff;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.25s ease;
-}
-.dashboard-card:hover {
-  transform: translateY(-4px);
+header h1 {
+    font-size: 2.25rem; /* formerly text-4xl */
+    font-weight: 800; /* formerly font-extrabold */
+    letter-spacing: -0.025em; /* formerly tracking-tight */
+    color: #22d3ee; /* formerly text-cyan-400 */
 }
 
-/* AQI Readings List */
-.aqi-list li {
-  font-size: 1.1rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid #eee;
+@media (min-width: 640px) {
+    header h1 { font-size: 3rem; /* formerly sm:text-5xl */ }
 }
-.aqi-list li:last-child {
-  border-bottom: none;
+
+header p {
+    margin-top: 1rem; /* formerly mt-4 */
+    font-size: 1.125rem; /* formerly text-lg */
+    color: #9ca3af; /* formerly text-gray-400 */
+}
+
+/* Main Content & Layout */
+main .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 2rem; /* formerly space-y-8 */
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+main h2 {
+    font-size: 1.5rem; /* formerly text-2xl */
+    font-weight: 700; /* formerly font-bold */
+}
+
+/* Connection Status */
+#connection-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* formerly gap-2 */
+    padding: 0.375rem 0.75rem; /* formerly px-3 py-1.5 */
+    border-radius: 9999px; /* formerly rounded-full */
+    font-size: 0.875rem; /* formerly text-sm */
+    font-weight: 500; /* formerly font-medium */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.status-connecting {
+    background-color: rgba(234, 179, 8, 0.2); /* formerly bg-yellow-500/20 */
+    color: #facc15; /* formerly text-yellow-400 */
+}
+
+.status-live {
+    background-color: rgba(34, 197, 94, 0.2); /* formerly bg-green-500/20 */
+    color: #4ade80; /* formerly text-green-400 */
+}
+
+.status-error,
+.status-no-data {
+    background-color: rgba(239, 68, 68, 0.2); /* formerly bg-red-500/20 */
+    color: #f87171; /* formerly text-red-400 */
+}
+
+/* Main AQI Display */
+#main-aqi-display {
+    padding: 2rem; /* formerly p-8 */
+    border-radius: 1rem; /* formerly rounded-2xl */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* formerly shadow-2xl */
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+#main-aqi-display h3 {
+    font-size: 1.125rem; /* formerly text-lg */
+    font-weight: 500; /* formerly font-medium */
+    color: #d1d5db; /* formerly text-gray-300 */
+}
+
+#main-aqi-display #main-aqi-value {
+    font-size: 4.5rem; /* formerly text-7xl */
+    font-weight: 800; /* formerly font-extrabold */
+    margin: 0.5rem 0; /* formerly my-2 */
+    transition: color 0.3s;
+}
+
+#main-aqi-display #main-aqi-label {
+    font-size: 1.5rem; /* formerly text-2xl */
+    font-weight: 600; /* formerly font-semibold */
+    transition: color 0.3s;
+}
+
+#main-aqi-display p:last-child {
+    color: #9ca3af; /* formerly text-gray-400 */
+    font-size: 0.875rem; /* formerly text-sm */
+    margin-top: 0.25rem; /* formerly mt-1 */
+}
+
+/* Sensor Cards Grid */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr)); /* formerly grid-cols-1 */
+    gap: 1.5rem; /* formerly gap-6 */
+}
+
+@media (min-width: 640px) {
+    .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); /* formerly sm:grid-cols-2 */ }
+}
+@media (min-width: 1024px) {
+    .cards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); /* formerly lg:grid-cols-3 */ }
+}
+
+.sensor-card {
+    background-color: rgba(30, 41, 59, 0.6); /* formerly bg-slate-800/60 */
+    padding: 1.25rem; /* formerly p-5 */
+    border-radius: 0.75rem; /* formerly rounded-xl */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* formerly shadow-lg */
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* formerly space-x-4 */
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.sensor-card:hover {
+    transform: scale(1.05); /* formerly hover:scale-105 */
+    background-color: #1e293b; /* formerly hover:bg-slate-800 */
+}
+
+.sensor-card .icon-container {
+    padding: 0.75rem; /* formerly p-3 */
+    border-radius: 9999px; /* formerly rounded-full */
+}
+
+.sensor-card h4 {
+    font-size: 0.875rem; /* formerly text-sm */
+    font-weight: 500; /* formerly font-medium */
+    color: #9ca3af; /* formerly text-gray-400 */
+}
+
+.sensor-card p {
+    font-size: 1.5rem; /* formerly text-2xl */
+    font-weight: 700; /* formerly font-bold */
+    color: white;
+}
+
+.sensor-card p .unit {
+    font-size: 1rem; /* formerly text-base */
+    font-weight: 400; /* formerly font-normal */
+    color: #9ca3af; /* formerly text-gray-400 */
+}
+
+/* Icon Colors */
+.icon-pm10 { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.icon-co2 { background-color: rgba(107, 114, 128, 0.2); color: #d1d5db; }
+.icon-nox { background-color: rgba(168, 85, 247, 0.2); color: #c084fc; }
+.icon-temp { background-color: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.icon-humidity { background-color: rgba(14, 165, 233, 0.2); color: #38bdf8; }
+
+/* Chart Container */
+.chart-container {
+    background-color: rgba(30, 41, 59, 0.6); /* formerly bg-slate-800/60 */
+    padding: 1.5rem; /* formerly p-6 */
+    border-radius: 0.75rem; /* formerly rounded-xl */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* formerly shadow-lg */
+    margin-top: 2rem; /* formerly mt-8 */
+}
+
+.chart-container h3 {
+    font-size: 1.25rem; /* formerly text-xl */
+    font-weight: 600; /* formerly font-semibold */
+    color: white;
+    margin-bottom: 1rem; /* formerly mb-4 */
+}
+
+.chart-wrapper {
+    width: 100%;
+    height: 18rem; /* formerly h-72 */
 }
 
 /* Footer */
-.app-footer {
-  background: #f8f9fa;
-  padding: 0.8rem;
-  text-align: center;
-  font-size: 0.85rem;
-  color: #6c757d;
-  border-top: 1px solid #dee2e6;
+footer {
+    text-align: center;
+    padding: 2rem 0; /* formerly py-8 */
+    margin-top: 2.5rem; /* formerly mt-10 */
+    color: #6b7280; /* formerly text-gray-500 */
+    font-size: 0.875rem; /* formerly text-sm */
+    border-top: 1px solid #374151; /* formerly border-t border-gray-700 */
+}
+
+/* AQI Color Classes */
+.aqi-good { color: #4ade80; }
+.aqi-good-bg { background-color: rgba(34, 197, 94, 0.2); }
+.aqi-satisfactory { color: #a3e635; }
+.aqi-satisfactory-bg { background-color: rgba(132, 204, 22, 0.2); }
+.aqi-moderate { color: #facc15; }
+.aqi-moderate-bg { background-color: rgba(234, 179, 8, 0.2); }
+.aqi-poor { color: #fb923c; }
+.aqi-poor-bg { background-color: rgba(251, 146, 60, 0.2); }
+.aqi-very-poor { color: #f87171; }
+.aqi-very-poor-bg { background-color: rgba(239, 68, 68, 0.2); }
+.aqi-severe { color: #e11d48; }
+.aqi-severe-bg { background-color: rgba(225, 29, 72, 0.2); }
+.aqi-unknown { color: #9ca3af; }
+.aqi-unknown-bg { background-color: #374151; }
+
+/* Chart.js Tooltip */
+.chartjs-tooltip {
+    background-color: #1F2937 !important;
+    border: 1px solid #374151 !important;
+    color: #F9FAFB !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem !important;
 }
