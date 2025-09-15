@@ -9,6 +9,7 @@ import "./App.css";
 // IMPORTANT: You MUST replace these placeholder values with your own
 // Firebase project configuration for the app to work correctly.
 // You can find these details in your Firebase project settings.
+
 const firebaseConfig = {
   apiKey: "AIzaSyDPki4OvYu3DRXf__FsQj81vuZXsF-n380",
   authDomain: "aqi-hackathon-150925.firebaseapp.com",
