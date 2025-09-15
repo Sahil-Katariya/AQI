@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Wifi, Thermometer, Droplets, Wind, Cloud, Mountain, Gauge } from 'lucide-react'; // Added Gauge icon
+import { Wifi, Thermometer, Droplets, Wind, Cloud, Mountain, Gauge } from 'lucide-react';
 import "./App.css";
 
 // --- Firebase Configuration ---
-// IMPORTANT: You MUST replace these placeholder values with your own
-// Firebase project configuration for the app to work correctly.
 const firebaseConfig = {
  apiKey: "AIzaSyDPki4OvYu3DRXf__FsQj81vuZXsF-n380",
  authDomain: "aqi-hackathon-150925.firebaseapp.com",
@@ -25,12 +23,15 @@ const db = getDatabase(app);
 
 // --- Helper Functions & Constants ---
 
-// Determines the color and label for a given PM2.5 AQI value.
+// ✨ IMPROVED: Determines the color and label for a given PM2.5 AQI value based on Indian standards.
 const getAqiInfo = (pm25) => {
  if (pm25 === null || pm25 === undefined) return { label: 'Unknown', color: 'text-gray-400', bg: 'bg-gray-700' };
- if (pm25 <= 50) return { label: 'Good', color: 'text-green-400', bg: 'bg-green-500/20' };
- if (pm25 <= 100) return { label: 'Moderate', color: 'text-yellow-400', bg: 'bg-yellow-500/20' };
- return { label: 'Hazardous', color: 'text-red-500', bg: 'bg-red-500/20' };
+ if (pm25 <= 30) return { label: 'Good', color: 'text-green-400', bg: 'bg-green-500/20' };
+ if (pm25 <= 60) return { label: 'Satisfactory', color: 'text-lime-400', bg: 'bg-lime-500/20' };
+ if (pm25 <= 90) return { label: 'Moderate', color: 'text-yellow-400', bg: 'bg-yellow-500/20' };
+ if (pm25 <= 120) return { label: 'Poor', color: 'text-orange-400', bg: 'bg-orange-500/20' };
+ if (pm25 <= 250) return { label: 'Very Poor', color: 'text-red-500', bg: 'bg-red-500/20' };
+ return { label: 'Severe', color: 'text-rose-600', bg: 'bg-rose-500/20' };
 };
 
 
@@ -63,8 +64,8 @@ const AQICard = ({ icon, title, value, unit, color }) => {
 const DataChart = ({ data }) => {
  return (
   <div className="bg-slate-800/60 p-6 rounded-xl shadow-lg mt-8">
-   <h3 className="text-xl font-semibold text-white mb-4">Historical Trends</h3>
-   <div className="w-full h-80"> {/* Increased height for better legend visibility */}
+   <h3 className="text-xl font-semibold text-white mb-4">📊 Historical Trends</h3>
+   <div className="w-full h-80">
     <ResponsiveContainer>
      <LineChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
       <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -100,7 +101,6 @@ const Dashboard = () => {
  const [connectionStatus, setConnectionStatus] = useState({ text: 'Connecting...', color: 'bg-yellow-500/20 text-yellow-400' });
 
  useEffect(() => {
-  // MODIFIED: Pointing to the correct path from dashboard.jsx
   const sensorDataRef = ref(db, 'sensors/node1');
 
   const unsubscribe = onValue(sensorDataRef, (snapshot) => {
@@ -115,8 +115,8 @@ const Dashboard = () => {
       ...data,
       timestamp: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
      };
-     // Keep the last 10 data points for a clean chart
-     return [...prevData, newDataPoint].slice(-10);
+     // ✨ IMPROVED: Keep the last 30 data points for a better trend view
+     return [...prevData, newDataPoint].slice(-30);
     });
    } else {
     setSensorData({});
@@ -127,7 +127,6 @@ const Dashboard = () => {
    setConnectionStatus({ text: 'Error', color: 'bg-red-500/20 text-red-400' });
   });
 
-  // Cleanup subscription on component unmount
   return () => unsubscribe();
  }, []);
 
@@ -146,12 +145,12 @@ const Dashboard = () => {
 
    {/* Main AQI Display */}
    <div className={`p-8 rounded-2xl shadow-2xl text-center ${aqiInfo.bg}`}>
-    <h3 className="text-lg font-medium text-gray-300">PM2.5 Air Quality</h3>
+    <h3 className="text-lg font-medium text-gray-300">PM2.5 Air Quality Index</h3>
     <p className={`text-7xl font-extrabold my-2 ${aqiInfo.color}`}>
      {(sensorData.pm25 !== null && sensorData.pm25 !== undefined) ? parseFloat(sensorData.pm25).toFixed(1) : '--'}
     </p>
     <p className={`text-2xl font-semibold ${aqiInfo.color}`}>{aqiInfo.label}</p>
-    <p className="text-gray-400 text-sm mt-1">Based on PM2.5 Levels (µg/m³)</p>
+    <p className="text-gray-400 text-sm mt-1">Based on Indian AQI Standards</p>
    </div>
 
    {/* Grid of all sensors */}
@@ -159,7 +158,6 @@ const Dashboard = () => {
     <AQICard icon={<Wind size={24} />} title="PM10" value={sensorData.pm10} unit="µg/m³" color="bg-blue-500/20 text-blue-400" />
     <AQICard icon={<Cloud size={24} />} title="Carbon Dioxide (CO₂)" value={sensorData.co2} unit="ppm" color="bg-gray-500/20 text-gray-300" />
     <AQICard icon={<Mountain size={24} />} title="Nitrogen Oxides (NOx)" value={sensorData.nox} unit="ppm" color="bg-purple-500/20 text-purple-400" />
-    {/* ADDED: Card for mq135 reading */}
     <AQICard icon={<Gauge size={24} />} title="Air Quality Index" value={sensorData.mq135} unit="ppm" color="bg-pink-500/20 text-pink-400" />
     <AQICard icon={<Thermometer size={24} />} title="Temperature" value={sensorData.temperature} unit="°C" color="bg-amber-500/20 text-amber-400" />
     <AQICard icon={<Droplets size={24} />} title="Humidity" value={sensorData.humidity} unit="%" color="bg-sky-500/20 text-sky-400" />
@@ -169,12 +167,16 @@ const Dashboard = () => {
    <DataChart data={historicalData} />
 
    {/* AQI Info */}
+   {/* ✨ IMPROVED: Updated legend to match the new 6-level AQI scale */}
    <div className="bg-slate-800/60 p-6 rounded-xl shadow-lg mt-8">
     <h3 className="text-xl font-semibold text-white mb-4">ℹ️ PM2.5 AQI Levels Explained</h3>
     <div className="flex flex-wrap gap-3 mt-2">
-     <span className="badge bg-green-500/20 text-green-400 p-2">Good (0–50)</span>
-     <span className="badge bg-yellow-500/20 text-yellow-400 p-2">Moderate (51–100)</span>
-     <span className="badge bg-red-500/20 text-red-400 p-2">Hazardous (100+)</span>
+     <span className="badge bg-green-500/20 text-green-400 p-2">Good (0-30)</span>
+     <span className="badge bg-lime-500/20 text-lime-400 p-2">Satisfactory (31-60)</span>
+     <span className="badge bg-yellow-500/20 text-yellow-400 p-2">Moderate (61-90)</span>
+     <span className="badge bg-orange-500/20 text-orange-400 p-2">Poor (91-120)</span>
+     <span className="badge bg-red-500/20 text-red-400 p-2">Very Poor (121-250)</span>
+     <span className="badge bg-rose-500/20 text-rose-600 p-2">Severe (250+)</span>
     </div>
    </div>
   </div>
